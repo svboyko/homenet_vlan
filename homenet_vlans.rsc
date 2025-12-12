@@ -567,13 +567,17 @@ $logAction info "Configuring firewall (basic) filters...";
 
 # ---------- IPv6 firewall ----------
 $logAction info "Configuring firewall (IPv6) filters...";
-:local ipv6Mode 1; # default to enabled
+# I know nothing about IPv6, so for now just disable it
+:local ipv6Mode 0; # default to disabled
 :onerror err in={
     :if ($ipv6Mode=0) do={
         # Disable IPv6 becasue we do not use it with VLANs yet
         $logAction info "This version does not support IPv6: Disable IPv6...";
         /ipv6 settings set disable-ipv6=yes
     } else={
+        # I added code (below) from the default configuration, along with some additional changes,
+        # but I am not fully confident in this part.
+
         # Fill addresses from default template
         /ipv6 firewall address-list
         :local badIPv6List { \

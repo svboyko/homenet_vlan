@@ -94,6 +94,8 @@ Copy the *homenet_vlans_config.json* to your router next to *homenet_vlans.rsc*.
 
 - **MAC addresses** - MikroTik recommends explicitly setting MAC addresses for more stable operation. This script does not modify MAC addresses. If you run it from scratch, MAC addresses are assigned automatically by the router. If you run it after applying the default configuration, the router has already set MAC addresses (from default configuration), and the script preserves them. The exception is WiFi VAPs: the script creates them but does not assign MAC addresses. If you want fixed MAC addresses for VAPs, configure them manually after the script finishes.
 
+- **IPv6** - I know nothing about IPv6, so it is disabled in this version. I added code from the default configuration, along with some additional changes, but I am not fully confident in this part.
+
 
 
 
