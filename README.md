@@ -1,26 +1,26 @@
-# Home Network VLAN configuration for Mikrotik router
+# Home Network VLAN configuration for MikroTik router
 
 ## Disclaimer
 
-This project is an amateur home project. Use it on your own risk.
+This project is an amateur home project. Use it at your own risk.
 
-If you are professional in this field, it will be very appreciated if you review it and send you feedback/notes.
+If you’re a professional in this area, I’d appreciate feedback/notes.
 
-This project tested on Mikrotik L009UiGS-2HaxD-IN only. Unfortunately other my Mikrotik device died before i was able to test script on it.
+This project tested on MikroTik L009UiGS-2HaxD-IN only. Unfortunately another MikroTik device died before I could test it.
 
 ## Overview
 
-This script allows you to configure Mikrotik router to use VLANs based on config file you create for it.
+This script allows you to configure MikroTik router to use VLANs based on config file you create for it.
 
-It can works in 2 modes
+It can work in two modes:
 
-- configure from scratch - Mikrotik should be reset without default configuration, i.e it should be completely clear
-- configure from defaults - Mikrotik should be reset with default configuration
+- configure from scratch - MikroTik should be reset without default configuration, i.e it should be reset with no default configuration (blank config)
+- configure from defaults - MikroTik should be reset with default configuration
 
 ## Requirements
 
 - RouterOS v.7 (tested on v7.20)
-- Mikrotik router with [hardware offload feature for VLAN filtering](https://help.mikrotik.com/docs/spaces/ROS/pages/328068/Bridging+and+Switching#BridgingandSwitching-BridgeHardwareOffloading). Possible it will work for routers without this feature, but network performance will not be great I presume.
+- MikroTik router with [hardware offload feature for VLAN filtering](https://help.mikrotik.com/docs/spaces/ROS/pages/328068/Bridging+and+Switching#BridgingandSwitching-BridgeHardwareOffloading). Possible it will work for routers without this feature, but network performance will not be great I presume.
 
 ## Installing
 
@@ -36,11 +36,35 @@ You have to make a configuration file *homenet_vlans_config.json* to let script 
 
 See *homenet_vlans_config_example.json* to understand to config file structure.
 
-Be careful with:
+Copy the *homenet_vlans_config.json* to your router nearby to *homenet_vlans.rsc*.
+
+### Configuration file structure notes
+
+- "pppoe" section in "wan" is optional, you can omit it. In this case system will not configure any WAN, but just add ether1 into WAN interface list. In case of default configuration, default DHCP client will be deleted. Example:
+    ```json
+    "wan" : {
+        "port": "ether1"
+    },
+    ```
+
+- "wifi" section in vlan is optional, vlan might not have own WiFi. See TV example in homenet_vlans_config_example.json
+    ```json
+    "tv": {
+        "id": 40,
+        "title": "TV VLAN",
+        "ip": {
+            "address": "192.168.40.1/24",
+            "subnet": "192.168.40.0/24",
+            "gateway": "192.168.40.1",
+            "dhcpRange": "192.168.40.100-192.168.40.199"
+        }
+    }
+    ```
+
+*Be careful with:*
 - JSON file structure - *homenet_vlans_config.json* should be a valid JSON file
 - names of ports (ether1, ...) - use only names of ports that your router really has
-
-Copy the *homenet_vlans_config.json* to your router nearby to *homenet_vlans.rsc*.
+- consistency of names/IPs/vlan IDs
 
 ## Running
 
@@ -66,9 +90,9 @@ Copy the *homenet_vlans_config.json* to your router nearby to *homenet_vlans.rsc
 
 - if connect to router by MAC-address after reset with default configuration, script crashes in the middle, you logs out and no more able to connect to router. Only hardware reset helps. I tried to all all MAC addresses, played with commands order - nothing helped. The only solution is us IP address to login before run the script.
 
-- I know nothing about bridge protocol-mode. For now script keep it as is (i presume rstp is default), but as I understand Mikrotik recomends to use mstp for vlans. ChatGPT, Codex and Perplexity recomMend to set none for home if you do not use other switch (simple home configuration), but i have another VLAN switch, so... We will see
+- I know nothing about bridge protocol-mode. For now script keep it as is (i presume rstp is default), but as I understand MikroTik recomends to use mstp for vlans. ChatGPT, Codex and Perplexity recomMend to set none for home if you do not use other switch (simple home configuration), but i have another VLAN switch, so... We will see
 
-- MAC addresses - Mikrotik recommends to set MAC addresses for more stable work. Script does not touch MAC addresses, so, if you run it from scratch, MAC addresses will be set by router automatically, but if you run after default configuration, it set MAC addresses itself, so script keep them. Exception - WiFi VAPs - script creates them but not assign MAC addresses. If you want to set them hardly, configure them after the script.
+- MAC addresses - MikroTik recommends to set MAC addresses for more stable work. Script does not touch MAC addresses, so, if you run it from scratch, MAC addresses will be set by router automatically, but if you run after default configuration, it set MAC addresses itself, so script keep them. Exception - WiFi VAPs - script creates them but not assign MAC addresses. If you want to set them hardly, configure them after the script.
 
 
 
