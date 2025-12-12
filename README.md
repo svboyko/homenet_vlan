@@ -86,6 +86,12 @@ Copy the *homenet_vlans_config.json* to your router next to *homenet_vlans.rsc*.
 - You will be logged out while the script runs because of reconfiguration.
 - Reconnect to router and tune-up your configuration if you need
 
+### Logging
+
+The script logs its execution to the file *homenet_vlans_log*, located next to the script file.
+
+**Note:** The log file includes all router output starting from the reset. Look for the entry “Script homenet_vlans started.” to find where the script execution begins.
+
 ## Known issues / open questions
 
 - If you log in via **MAC address** after a reset **with default settings**, and then run the script, the script fails mid-run. You will be kicked out and will no longer be able to reconnect to the router. Only a hardware reset helps after that. I tried allowing all MAC addresses and changing the command execution order, but nothing helped. The only reliable solution is to log in using an IP address before running the script. There is no such problem if you run the script after reset **without default settings**
