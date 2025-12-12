@@ -1,0 +1,112 @@
+{
+    "bridgeName": "bridge-main",
+    "timeZoneName": "Europe/Bratislava",
+    "dnsServers": "8.8.8.8,8.8.4.4",
+    "countryCode": "Slovakia",
+
+    "wan" : {
+        "port": "ether1",
+        "pppoe": {
+            "name": "pppoe-uplink",
+            "username": "pppoe_username",
+            "password": "pppoe_password",
+            "serviceName": "PPPOE_SERVICE_NAME"
+        }
+    },
+
+    "vlans": {
+        "list": {
+            "main": {
+                "id": 10,
+                "title": "Main VLAN",
+                "ip": {
+                    "address": "192.168.10.1/24",
+                    "subnet": "192.168.10.0/24",
+                    "gateway": "192.168.10.1",
+                    "dhcpRange": "192.168.10.100-192.168.10.199"
+                },
+                "wifi": {
+                    "radio": "wifi1",
+                    "main": true,
+                    "ssid": "MainHomeWiFi",
+                    "password": "MainWiFiPassword",
+                    "encryption": "wpa2-psk,wpa3-psk"
+                }
+            },
+            "guest": {
+                "id": 20,
+                "title": "Guest VLAN",
+                "ip": {
+                    "address": "192.168.20.1/24",
+                    "subnet": "192.168.20.0/24",
+                    "gateway": "192.168.20.1",
+                    "dhcpRange": "192.168.20.100-192.168.20.199"
+                },
+                "wifi": {
+                    "radio": "wifi1",
+                    "main": false,
+                    "ssid": "GuestHomeWiFi",
+                    "password": "GuestWiFiPassword",
+                    "encryption": "wpa2-psk"
+                }
+            },
+            "iot": {
+                "id": 30,
+                "title": "SmartHome/IoT VLAN",
+                "ip": {
+                    "address": "192.168.30.1/24",
+                    "subnet": "192.168.30.0/24",
+                    "gateway": "192.168.30.1",
+                    "dhcpRange": "192.168.30.100-192.168.30.199"
+                },
+                "wifi": {
+                    "radio": "wifi1",
+                    "main": false,
+                    "ssid": "IoTHomeWiFi",
+                    "password": "IoTWiFiPassword",
+                    "encryption": "wpa2-psk"
+                }
+            },
+            "tv": {
+                "id": 40,
+                "title": "TV VLAN",
+                "ip": {
+                    "address": "192.168.40.1/24",
+                    "subnet": "192.168.40.0/24",
+                    "gateway": "192.168.40.1",
+                    "dhcpRange": "192.168.40.100-192.168.40.199"
+                }
+            }
+        },
+        "ports": {
+            "ether2": {
+                "comment": "Trunk to VLAN switch",
+                "trunk": [ "main", "guest", "iot" ]
+            },
+            "ether3": {
+                "comment": "Computer 1",
+                "vlan": "main"
+            },
+            "ether4": {
+                "comment": "Computer 2",
+                "vlan": "main"
+            },
+            "ether5": {
+                "comment": "Computer 3",
+                "vlan": "main"
+            },
+            "ether6": {
+                "comment": "NAS",
+                "trunk": [ "main", "tv" ]
+            },
+            "ether7": {
+                "comment": "TV",
+                "vlan": "tv"
+            },
+            "ether8": {
+                "comment": "Smart Home Controller",
+                "vlan": "iot"
+            }
+        }
+    }
+}
