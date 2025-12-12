@@ -10,7 +10,7 @@ This project is tested on MikroTik L009UiGS-2HaxD-IN only. Unfortunately another
 
 ## Overview
 
-This script allows you to configure a MikroTik router to use VLANs based on config file you create for it.
+This script allows you to configure a MikroTik router to use VLANs based on a config file you create for it.
 
 It can work in two modes:
 
@@ -20,7 +20,7 @@ It can work in two modes:
 ## Requirements
 
 - RouterOS v.7 (tested on v7.20)
-- MikroTik router with [hardware offload feature for VLAN filtering](https://help.mikrotik.com/docs/spaces/ROS/pages/328068/Bridging+and+Switching#BridgingandSwitching-BridgeHardwareOffloading). Possible it will work for routers without this feature, but network performance will not be great I presume.
+- MikroTik router with [hardware offload feature for VLAN filtering](https://help.mikrotik.com/docs/spaces/ROS/pages/328068/Bridging+and+Switching#BridgingandSwitching-BridgeHardwareOffloading). Possible it may work on routers without this feature, but network performance will probably suffer.
 
 ## Installing
 
@@ -32,22 +32,22 @@ If you use Windows and WinBox:
 
 ## Configuration
 
-You have to make a configuration file *homenet_vlans_config.json* to let the script know what exactly network to configure.
+You have to make a configuration file *homenet_vlans_config.json* to let the script know how exactly network to configure.
 
-See *homenet_vlans_config_example.json* to understand to config file structure.
+See *homenet_vlans_config_example.json* to understand the config file structure.
 
-Copy the *homenet_vlans_config.json* to your router nearby to *homenet_vlans.rsc*.
+Copy the *homenet_vlans_config.json* to your router next to *homenet_vlans.rsc*.
 
 ### Configuration file structure notes
 
-- "pppoe" section in "wan" is optional, you can omit it. In this case system will not configure any WAN, but just add ether1 into WAN interface list. In case of default configuration, default DHCP client will be deleted. Example:
+- The "pppoe" section in "wan" is optional; if omitted, the system won’t configure WAN and will just add ether1 to the WAN interface list. In case of default config used, the default DHCP client will be removed. Example:
     ```json
     "wan" : {
         "port": "ether1"
     },
     ```
 
-- "wifi" section in vlan is optional, vlan might not have own WiFi. See TV example in homenet_vlans_config_example.json
+- "wifi" section in "vlan" is optional, a VLAN might not have its own WiFi. See TV example in homenet_vlans_config_example.json
     ```json
     "tv": {
         "id": 40,
@@ -70,29 +70,29 @@ Copy the *homenet_vlans_config.json* to your router nearby to *homenet_vlans.rsc
 
 ### Configure from scratch
 
-- Ensure that both files (*homenet_vlans.rsc* and *homenet_vlans_config.json*) copied to your router
-- reset you router configuration **without** default configuration
-- re-connect to router (after reset). Use not a **WAN** and not a **TRUNK** port.
+- Ensure that both files (*homenet_vlans.rsc* and *homenet_vlans_config.json*) are copied to your router
+- reset your router configuration **without** default configuration
+- reconnect to router (after reset). Use a port that is not a **WAN** and not **TRUNK**.
 - run *homenet_vlans.rsc* script (*/import homenet_vlans.rsc*)
-- you might be logged out while the script runs because of re-configuration.
-- re-connect to router and tune-up your configuration if you need
+- you might be logged out while the script runs because of reconfiguration.
+- reconnect to router and tune-up your configuration if you need
 
 ### Configure from defaults
 
-- Ensure that both files (*homenet_vlans.rsc* and *homenet_vlans_config.json*) copied to your router
+- Ensure that both files (*homenet_vlans.rsc* and *homenet_vlans_config.json*) are copied to your router
 - reset your router configuration **with** default configuration
 - reconnect to router ***by IP address (NOT by MAC address)***. Use not a **WAN** and not a **TRUNK** port.
 - run *homenet_vlans.rsc* script (*/import homenet_vlans.rsc*)
-- you will be logged out during script working because of re-configuration.
+- you will be logged out while the script runs because of reconfiguration.
 - reconnect to router and tune-up your configuration if you need
 
 ## Known issues / open questions
 
-- If you log in by MAC after a default reset, the script fails mid-run; you logs out and no more able to connect to router. Only hardware reset helps. I tried to allow all MAC addresses, played with commands order - nothing helped. The only solution is to use IP address to login before run the script.
+- If you log in via **MAC address** after a reset **with default settings**, and then run the script, the script fails mid-run. You will be kicked out and will no longer be able to reconnect to the router. Only a hardware reset helps after that. I tried allowing all MAC addresses and changing the command execution order, but nothing helped. The only reliable solution is to log in using an IP address before running the script. There is no such problem if you run the script after reset **without default settings**
 
-- I know nothing about bridge protocol-mode. For now script keep it as is (i presume rstp is default), but as I understand MikroTik recommends to use mstp for vlans. ChatGPT, Codex and Perplexity recomMend to set none for home if you do not use other switch (simple home configuration), but i have another VLAN switch, so... We will see
+- I know nothing about bridge **protocol-mode**. For now script keeps it as is (i presume RSTP is default), but as I understand MikroTik recommends to use MSTP for VLANs. ChatGPT, Codex and Perplexity recommend to set **none** for home if you do not use other switch (simple home configuration), but i have another VLAN switch, so we will see...
 
-- MAC addresses - MikroTik recommends to set MAC addresses for more stable work. Script does not touch MAC addresses, so, if you run it from scratch, MAC addresses will be set by router automatically, but if you run after default configuration, it set MAC addresses itself, so script keep them. Exception - WiFi VAPs - script creates them but not assign MAC addresses. If you want to set them hardly, configure them after the script.
+- **MAC addresses** - MikroTik recommends explicitly setting MAC addresses for more stable operation. This script does not modify MAC addresses. If you run it from scratch, MAC addresses are assigned automatically by the router. If you run it after applying the default configuration, the router has already set MAC addresses (from default configuration), and the script preserves them. The exception is WiFi VAPs: the script creates them but does not assign MAC addresses. If you want fixed MAC addresses for VAPs, configure them manually after the script finishes.
 
 
 
